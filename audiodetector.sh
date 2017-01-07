@@ -59,7 +59,7 @@ function graph {
 }
 
 function run_tests {
-    # python2.7 -m unittest discover -p 'tests/*_tests.py'
+    python2.7 -m unittest discover -p 'audio_detector/tests/*_tests.py'
 }
 
 function log {
