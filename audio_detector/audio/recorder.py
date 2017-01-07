@@ -61,7 +61,9 @@ class Recorder(object):
             loop_counter += 1
             #logging.debug('Recorder: reading chunk (i: %s, loop_counter: %s)...' % (i,loop_counter) )
             try:
-                data = self._stream.read(self._CHUNK,exception_on_overflow=False)
+                # only with newer pyaudio:
+                # data = self._stream.read(self._CHUNK,exception_on_overflow=False)
+                data = self._stream.read(self._CHUNK)
                 frames.append(data)
             except IOError as error:
                 error_rate += 1
