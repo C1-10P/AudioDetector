@@ -27,15 +27,35 @@ class Recorder(object):
         #                                frames_per_buffer=self._CHUNK / 2,
         #                                start=False)
 
+        input_device_idx = self._config.recorder.input_device_index
+        self._input_index_mode = False
+        self._input_idx = -1
+
+        if str(input_device_idx).isdigit():
+         self._input_idx = int(input_device_idx)
+         self._input_index_mode = True
+
+
     def _open_stream(self):
         self._input_idx = self._config.recorder.input_device_index
-        # Use a stream with no callback function in blocking mode
-        self._stream = self._audio.open(format=pyaudio.paInt16,
+        if self._input_index_mode:
+         logging.debug('Recorder: use special device (index: %s)' % self._input_idx )
+         # Use a stream with no callback function in blocking mode
+         self._stream = self._audio.open(format=pyaudio.paInt16,
                                         channels=self._CHANNELS,
                                         rate=self._RATE,
                                         input=True,
                                         input_device_index=self._input_idx,
                                         frames_per_buffer=self._CHUNK / 2)
+
+        else:
+           logging.debug('Recorder: use default device' )
+           self._stream = self._audio.open(format=pyaudio.paInt16,
+                                        channels=self._CHANNELS,
+                                        rate=self._RATE,
+                                        input=True,
+                                        frames_per_buffer=self._CHUNK / 2)
+
 
     def record(self, duration):
         tic = time.clock()
