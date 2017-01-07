@@ -1,0 +1,27 @@
+{
+    "email": {
+        "username": "user",
+        "password": "pass",
+        "from_email": "user@example.com",
+        "subject": "sound",
+        "host": "mail.example.com",
+        "port": 25,
+        "mail_list": ["user2@example.com"],
+        "notification_wait_time" : 10
+    },
+    "recorder": {
+        "record_time": 3,
+        "input_device_index" : 3,
+        "max_error_rate" : 10
+    },
+    "audio_detector": {
+        "watchdog_restart_wait": 3,
+        "watchdog_lookup_time" : 30,
+        "loglevel" : "DEBUG"
+    },
+    "storage": {
+        "finger_print_db": 
+"/var/lib/audio_detector/finger_prints.pckl",
+        "occurence_db": "/var/lib/audio_detector/occurences.pckl"
+    }
+}
