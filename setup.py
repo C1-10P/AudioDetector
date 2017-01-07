@@ -4,7 +4,7 @@ setup(
     name='audio_detector',
     version='0.1',
     description='Classification of signals to detect sounds',
-    url="https://github.com/C1-10P/BabyMonitor.git",
+    url="https://github.com/C1-10P/AudioDetector",
     author='C1-10P (fork author), Damian Nowok (original author)',
     author_email="C1-10P@users.noreply.github.com",
     license='GPL',
