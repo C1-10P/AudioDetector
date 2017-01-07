@@ -27,3 +27,7 @@ lot of code. I broke with the original application design, so
 it is dificult to contribute my changes back to the orignial project.
 Maybe my modifications are useful for somebody. I want to to share my 
 modifications with the community. So I decided to start a little fork.
+
+#License
+
+GNU GENERAL PUBLIC LICENSE Version 2
