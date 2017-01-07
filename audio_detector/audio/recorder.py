@@ -34,7 +34,7 @@ class Recorder(object):
                                         channels=self._CHANNELS,
                                         rate=self._RATE,
                                         input=True,
-                                       # input_device_index=self._input_idx,
+                                        input_device_index=self._input_idx,
                                         frames_per_buffer=self._CHUNK / 2)
 
     def record(self, duration):

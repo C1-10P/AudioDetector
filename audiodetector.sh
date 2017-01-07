@@ -80,7 +80,7 @@ function train1 {
 
 
 function train2 {
-    cd app/tools
+    cd audio_detector/tools
     python2.7 add_finger_print.py -d ../../data/sample_data2
     cd ..
     cd ..
