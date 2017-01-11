@@ -7,7 +7,7 @@ import logging
 import time
 
 class Recorder(object):
-    _CHUNK = 1024
+    _CHUNK = (8 * 1024)
     _RATE = 44100
     _CHANNELS = 1
 
@@ -27,15 +27,40 @@ class Recorder(object):
         #                                frames_per_buffer=self._CHUNK / 2,
         #                                start=False)
 
+        input_device_idx = self._config.recorder.input_device_index
+        self._input_index_mode = False
+        self._input_idx = -1
+
+        if str(input_device_idx).isdigit():
+         self._input_idx = int(input_device_idx)
+         self._input_index_mode = True
+
+
     def _open_stream(self):
         self._input_idx = self._config.recorder.input_device_index
-        # Use a stream with no callback function in blocking mode
-        self._stream = self._audio.open(format=pyaudio.paInt16,
+        if self._input_index_mode:
+         logging.debug('Recorder: use special device (index: %s)' % self._input_idx )
+
+         special_device = self._audio.get_device_info_by_index(self._input_idx)
+         logging.debug('Recorder: use special device (%s)' % str(special_device) )
+
+         # Use a stream with no callback function in blocking mode
+         self._stream = self._audio.open(format=pyaudio.paInt16,
                                         channels=self._CHANNELS,
                                         rate=self._RATE,
                                         input=True,
                                         input_device_index=self._input_idx,
                                         frames_per_buffer=self._CHUNK / 2)
+
+        else:
+           default_device = self._audio.get_default_input_device_info()
+           logging.debug('Recorder: use default device (%s)' % str(default_device) )
+           self._stream = self._audio.open(format=pyaudio.paInt16,
+                                        channels=self._CHANNELS,
+                                        rate=self._RATE,
+                                        input=True,
+                                        frames_per_buffer=self._CHUNK / 2)
+
 
     def record(self, duration):
         tic = time.clock()
@@ -62,8 +87,8 @@ class Recorder(object):
             #logging.debug('Recorder: reading chunk (i: %s, loop_counter: %s)...' % (i,loop_counter) )
             try:
                 # only with newer pyaudio:
-                # data = self._stream.read(self._CHUNK,exception_on_overflow=False)
-                data = self._stream.read(self._CHUNK)
+                data = self._stream.read(self._CHUNK,exception_on_overflow=False)
+                # data = self._stream.read(self._CHUNK)
                 frames.append(data)
             except IOError as error:
                 error_rate += 1

@@ -1,3 +1,8 @@
+import sys
+#sys.path.insert(1,'/usr/lib/python2.7/dist-packages')
+#sys.path.insert(1,'/usr/local/lib/python2.7/dist-packages/PyAudio-0.2.9-py2.7-linux-armv6l.egg')
+#sys.path.insert(1,'/usr/lib/python2.7/plat-arm-linux-gnueabihf')
+print sys.path
 import multiprocessing
 from audio import recorder
 from storage import storage
@@ -7,7 +12,10 @@ import Queue
 from datetime import datetime
 import logging
 import time
-
+import wave
+import argparse
+import os
+from audio import recording
 
 class AudioDetector(object):
 
@@ -16,18 +24,9 @@ class AudioDetector(object):
         #super(AudioDetector, self).__init__(*args)
         self._config = cfg
 
-        self._recorder = recorder.Recorder(self._config)
         self._analyzer = analyzer.Analyzer()
         self._notifier = notifier.Notifier(self._config)
         self._storage = storage.Storage(self._config)
-
-        self._last_notification = None
-        self._recording_process = None
-        self._detecting_process = None
-        self._processing_processes = None
-        
-        self._recording_queue = multiprocessing.Queue()
-        self._finger_print_queue = multiprocessing.Queue()
   
         # check if empty fingerprint list
         if not self._storage.get_finger_prints():
@@ -35,13 +34,47 @@ class AudioDetector(object):
           raise IOError
 
         
-	self._recording_alive = multiprocessing.Event()
 
-	self._exit_group0 = multiprocessing.Event()
-        self._exit_group1 = multiprocessing.Event()
+    def alternative_mode(self,file_path):
+
+        waveFile = wave.open(file_path)
+        waveData = waveFile.readframes(waveFile.getnframes())
+        rec = recording.Recording(waveData, waveFile.getframerate(), waveFile.getsampwidth(), waveFile.getnchannels())
+        
+        logging.debug('alternative_mode: analyze wav file ...')
+        finger_print = self._analyzer.finger_print(rec)
+        logging.debug('alternative_mode: detection start ...')
+        confidences = []
+        finger_print_names = []
+        #logging.debug('detecting_process: fingerprint %s ' % str(finger_print))
+        for reference in self._storage.get_finger_prints():
+          #logging.debug('detecting_process: compare %s ' % str(reference))
+          if finger_print.compare(reference):
+             confidences.append(finger_print.compare_confidence(reference))
+             finger_print_names.append(reference.get_name())
+             if confidences:
+                logging.info('alternative_mode: <!> found confidences <!>')
+                self._notify(confidences, finger_print_names)
+        logging.debug('alternative_mode: detection end ...')
+
+
 
     def start(self):
         logging.debug('AudioDetector->start')
+        self._recorder = recorder.Recorder(self._config)
+        self._last_notification = None
+        self._recording_process = None
+        self._detecting_process = None
+        self._processing_processes = None
+        
+        self._recording_queue = multiprocessing.Queue()
+        self._finger_print_queue = multiprocessing.Queue()
+
+	self._recording_alive = multiprocessing.Event()
+	self._exit_group0 = multiprocessing.Event()
+        self._exit_group1 = multiprocessing.Event()
+
+
         self.start_group0()
         self.start_group1()
         
@@ -264,8 +297,31 @@ if __name__ == "__main__":
 level=loglevel, format="%(asctime)s;%(levelname)s;%(message)s")
 
     logging.info('Start')
+    
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--file',help='put the path to a wav-file here. the programm will start in alternative mode.',
+                        default=None)
+    parser.add_argument('-q', dest='quiet', action='store_true', default=False)
+
+
+    # Arguments
+    args = parser.parse_args()
+    file_path = args.file
+
+    alternative_mode = False
+    if file_path is not None:
+     alternative_mode = True
+ 
+    quiet = args.quiet
 
     b = AudioDetector(cfg)
-    b.start()
+    if alternative_mode:
+      b.alternative_mode(file_path)
+    else:
+      b.start()
 
     logging.info('END')
+
+
+    

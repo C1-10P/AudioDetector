@@ -7,7 +7,8 @@ APP_NAME="AudioDetector"
 function show_help {
     echo "This is $APP_NAME."
     echo "Available options: "
-    echo "start - To start $APP_NAME."
+    echo "alsa-start - To start $APP_NAME in alsa record mode."
+    echo "pyaudio-start - To start $APP_NAME in pyaudio mode."
     echo "stop  - To stop $APP_NAME."
     echo "test  - To run tests"
     echo "train1 - To add fingerprints"
@@ -31,7 +32,106 @@ function clean {
 }
 
 
-function start {
+function clean_up {
+        rm data/recording/signal_9s_1.wav
+        rm data/recording/signal_9s_2.wav
+        rm data/recording/signal_9s_3.wav
+	# Perform program exit housekeeping
+	echo "Good Bye."
+	exit
+}
+
+
+function recording1(){
+	echo "Start Recording 1 ..."
+#	arecord -q -D plughw:1,0 -d 9 -f S16_LE -c1 -r44100 -t wav data/recording/signal_9s_1.wav
+#  shitty Bug in arecord on raspberry creates a lot of wav-files
+#  https://github.com/nodesign/weio/issues/178
+#  http://superuser.com/questions/583826/recording-using-arecord-creates-thousands-of-files
+#  Workaround:
+#        timeout 9s arecord -D plughw:1,0 -d 9 -f S16_LE -c 1 -r 44100 -t wav - > data/recording/signal_9s_1.wav 2> /dev/null
+        timeout 5s arecord -D plughw:1,0 -d 5 -f S16_LE -c 1 -r 22000 -t wav - > data/recording/signal_9s_1.wav 2> /dev/null
+
+}
+
+function recording2(){
+        echo "Start Recording 2 ..."
+#  arecord -q -D plughw:1,0 -d 9 -f S16_LE -c1 -r44100 -t wav data/recording/signal_9s_2.wav
+#  shitty Bug in arecord on raspberry creates a lot of wav-files
+#  https://github.com/nodesign/weio/issues/178
+#  http://superuser.com/questions/583826/recording-using-arecord-creates-thousands-of-files
+#  Workaround:
+
+#        timeout 9s arecord -D plughw:1,0 -d 9 -f S16_LE -c 1 -r 44100 -t wav - > data/recording/signal_9s_2.wav 2> /dev/null
+        timeout 5s arecord -D plughw:1,0 -d 5 -f S16_LE -c 1 -r 22000 -t wav - > data/recording/signal_9s_2.wav 2> /dev/null
+
+}
+
+
+function recording3(){
+        echo "Start Recording 2 ..."
+#  arecord -q -D plughw:1,0 -d 9 -f S16_LE -c1 -r44100 -t wav data/recording/signal_9s_2.wav
+#  shitty Bug in arecord on raspberry creates a lot of wav-files
+#  https://github.com/nodesign/weio/issues/178
+#  http://superuser.com/questions/583826/recording-using-arecord-creates-thousands-of-files
+#  Workaround:
+
+#        timeout 9s arecord -D plughw:1,0 -d 9 -f S16_LE -c 1 -r 44100 -t wav - > data/recording/signal_9s_3.wav 2> /dev/null
+        timeout 5s arecord -D plughw:1,0 -d 5 -f S16_LE -c 1 -r 22000 -t wav - > data/recording/signal_9s_3.wav 2> /dev/null
+
+}
+
+
+function analyse1() {
+
+    cd audio_detector
+    python2.7 -O -u audio_detector.py --file ../data/recording/signal_9s_1.wav >> audiodetector_output.log 2>&1 &
+    cd ..
+
+
+}
+
+function analyse2() {
+
+    cd audio_detector
+    python2.7 -O -u audio_detector.py --file ../data/recording/signal_9s_2.wav >> audiodetector_output.log 2>&1 &
+    cd ..
+}
+
+function analyse3() {
+
+    cd audio_detector
+    python2.7 -O -u audio_detector.py --file ../data/recording/signal_9s_3.wav >> audiodetector_output.log 2>&1 &
+    cd ..
+}
+
+
+function start_alsa {
+
+    trap clean_up SIGHUP SIGINT SIGTERM
+
+    echo "stop programm by pressing STRG-C"
+    echo ""
+    while true; do
+
+       recording1 
+
+       analyse1 &
+
+       recording2
+
+       analyse2 &
+
+       recording3
+
+       analyse3 &
+
+    done
+
+
+}
+
+function start_pyaudio {
     cd audio_detector
     python2.7 -u audio_detector.py >> audiodetector_output.log 2>&1 &
     pid=$!
@@ -88,8 +188,11 @@ function train2 {
 
 
 case $CMD in
-    'start')
-    start
+    'alsa-start')
+    start_alsa
+    ;;
+    'pyaudio-start')
+    start_pyaudio
     ;;
     'stop')
     stop
