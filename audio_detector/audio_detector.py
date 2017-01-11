@@ -28,6 +28,8 @@ class AudioDetector(object):
         self._analyzer = analyzer.Analyzer()
         self._notifier = notifier.Notifier(self._config)
         self._storage = storage.Storage(self._config)
+
+        self._last_notification = None
   
         # check if empty fingerprint list
         if not self._storage.get_finger_prints():
