@@ -4,4 +4,5 @@ apt-get install -y python-pyaudio
 #lib/pyaudio/install-raspberry-pyaudio.sh
 apt-get install -y python-numpy
 apt-get install -y python-matplotlib
-
+mkdir data
+mkdir data/recording
