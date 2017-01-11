@@ -268,8 +268,13 @@ class AudioDetector(object):
         self._storage.add_occurence(now, max(confidences))
         contents = self._format_occurences(now, confidences, finger_print_names)
         self._print_occurences(contents)
+        
+        send_notify = True
+        if self._last_notification is not None:
+          if not (now - self._last_notification).total_seconds() > self._config.email.notification_wait_time:
+             send_notify = False
 
-        if self._last_notification is None or (now - self._last_notification).total_seconds() > self._config.email.notification_wait_time:
+        if send_notify:
             self._last_notification = now
             self._notifier.notify(contents)
 
