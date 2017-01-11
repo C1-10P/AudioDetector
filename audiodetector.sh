@@ -50,6 +50,8 @@ function recording1(){
 #  http://superuser.com/questions/583826/recording-using-arecord-creates-thousands-of-files
 #  Workaround:
         timeout 9s arecord -D plughw:1,0 -d 9 -f S16_LE -c 1 -r 44100 -t wav - > data/recording/signal_9s_1.wav 2> /dev/null
+        normalize-audio data/recording/signal_9s_1.wav
+
 #        timeout 5s arecord -D plughw:1,0 -d 5 -f S16_LE -c 1 -r 22000 -t wav - > data/recording/signal_9s_1.wav 2> /dev/null
 
 }
@@ -63,13 +65,14 @@ function recording2(){
 #  Workaround:
 
         timeout 9s arecord -D plughw:1,0 -d 9 -f S16_LE -c 1 -r 44100 -t wav - > data/recording/signal_9s_2.wav 2> /dev/null
+        normalize-audio data/recording/signal_9s_2.wav
 #        timeout 5s arecord -D plughw:1,0 -d 5 -f S16_LE -c 1 -r 22000 -t wav - > data/recording/signal_9s_2.wav 2> /dev/null
 
 }
 
 
 function recording3(){
-        echo "Start Recording 2 ..."
+        echo "Start Recording 3 ..."
 #  arecord -q -D plughw:1,0 -d 9 -f S16_LE -c1 -r44100 -t wav data/recording/signal_9s_2.wav
 #  shitty Bug in arecord on raspberry creates a lot of wav-files
 #  https://github.com/nodesign/weio/issues/178
@@ -77,6 +80,7 @@ function recording3(){
 #  Workaround:
 
         timeout 9s arecord -D plughw:1,0 -d 9 -f S16_LE -c 1 -r 44100 -t wav - > data/recording/signal_9s_3.wav 2> /dev/null
+        normalize-audio data/recording/signal_9s_3.wav
 #        timeout 5s arecord -D plughw:1,0 -d 5 -f S16_LE -c 1 -r 22000 -t wav - > data/recording/signal_9s_3.wav 2> /dev/null
 
 }
