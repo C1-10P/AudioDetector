@@ -49,8 +49,9 @@ function recording1(){
 #  https://github.com/nodesign/weio/issues/178
 #  http://superuser.com/questions/583826/recording-using-arecord-creates-thousands-of-files
 #  Workaround:
-#        timeout 9s arecord -D plughw:1,0 -d 9 -f S16_LE -c 1 -r 44100 -t wav - > data/recording/signal_9s_1.wav 2> /dev/null
-        timeout 5s arecord -D plughw:1,0 -d 5 -f S16_LE -c 1 -r 22000 -t wav - > data/recording/signal_9s_1.wav 2> /dev/null
+        timeout 9s arecord -D plughw:1,0 -d 9 -f S16_LE -c 1 -r 44100 -t wav - > data/recording/signal_9s_1.wav 2> /dev/null
+#        timeout 5s arecord -D plughw:1,0 -d 5 -f S16_LE -c 1 -r 22000 -t wav - > data/recording/signal_9s_1.wav 2> 
+/dev/null
 
 }
 
@@ -62,8 +63,9 @@ function recording2(){
 #  http://superuser.com/questions/583826/recording-using-arecord-creates-thousands-of-files
 #  Workaround:
 
-#        timeout 9s arecord -D plughw:1,0 -d 9 -f S16_LE -c 1 -r 44100 -t wav - > data/recording/signal_9s_2.wav 2> /dev/null
-        timeout 5s arecord -D plughw:1,0 -d 5 -f S16_LE -c 1 -r 22000 -t wav - > data/recording/signal_9s_2.wav 2> /dev/null
+        timeout 9s arecord -D plughw:1,0 -d 9 -f S16_LE -c 1 -r 44100 -t wav - > data/recording/signal_9s_2.wav 2> /dev/null
+#        timeout 5s arecord -D plughw:1,0 -d 5 -f S16_LE -c 1 -r 22000 -t wav - > data/recording/signal_9s_2.wav 2> 
+/dev/null
 
 }
 
@@ -76,8 +78,9 @@ function recording3(){
 #  http://superuser.com/questions/583826/recording-using-arecord-creates-thousands-of-files
 #  Workaround:
 
-#        timeout 9s arecord -D plughw:1,0 -d 9 -f S16_LE -c 1 -r 44100 -t wav - > data/recording/signal_9s_3.wav 2> /dev/null
-        timeout 5s arecord -D plughw:1,0 -d 5 -f S16_LE -c 1 -r 22000 -t wav - > data/recording/signal_9s_3.wav 2> /dev/null
+        timeout 9s arecord -D plughw:1,0 -d 9 -f S16_LE -c 1 -r 44100 -t wav - > data/recording/signal_9s_3.wav 2> /dev/null
+#        timeout 5s arecord -D plughw:1,0 -d 5 -f S16_LE -c 1 -r 22000 -t wav - > data/recording/signal_9s_3.wav 2> 
+/dev/null
 
 }
 

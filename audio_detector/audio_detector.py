@@ -2,7 +2,8 @@ import sys
 #sys.path.insert(1,'/usr/lib/python2.7/dist-packages')
 #sys.path.insert(1,'/usr/local/lib/python2.7/dist-packages/PyAudio-0.2.9-py2.7-linux-armv6l.egg')
 #sys.path.insert(1,'/usr/lib/python2.7/plat-arm-linux-gnueabihf')
-print sys.path
+#print sys.path
+
 import multiprocessing
 from audio import recorder
 from storage import storage
